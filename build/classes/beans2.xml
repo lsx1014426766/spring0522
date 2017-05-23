@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+	   xmlns:aop="http://www.springframework.org/schema/aop"
+
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+             http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+             http://www.springframework.org/schema/context
+             http://www.springframework.org/schema/context/spring-context-2.5.xsd
+             http://www.springframework.org/schema/aop
+             http://www.springframework.org/schema/aop/spring-aop-2.5.xsd">
+<!-- 真实的spring bean 引入了头标识
+注解方式
+ -->
+<!-- 
+此方式是通过注解的形式向需要王bean属性中注入内容
+通过此注解，就不需要在这里定义bean时给bean加上auto-wire属性设置值了
+这个注解，其实是实例化了4个XXXPostProcessor，是用来在bean实例化时去检查是否有添加注解配置
+如果有就调用这里实例化的处理器bean，来对注解做出解释处理，注入需要的属性
+ -->
+    
+    <context:annotation-config />
+    <!-- 
+    组件扫描 一下4类认为是组件：@Component, @Repository @Service @Controller
+     -->
+    <context:component-scan base-package="com.bjsxt"/>
+    
+    <!-- 
+    component 组件 在另一个bean看来就是一个资源， 定义包扫描  可以不再xml中写bean定义了
+    全部让spring去做包扫描
+     -->
+     <!-- aop注解 -->
+	<aop:aspectj-autoproxy/>
+</beans>

@@ -1,0 +1,10 @@
+<!-- 这是自定义的普通 的xml文件，仿照spring配置文件 -->
+
+<beans>
+	<bean id="u" class="com.bjsxt.dao.impl.UserDAOImpl" />
+	<bean id="userService" class="com.bjsxt.service.UserService" >
+		<property name="userDAO" bean="u"/>
+	
+	</bean>
+	
+</beans>
