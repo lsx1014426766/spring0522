@@ -5,7 +5,11 @@ import java.lang.reflect.Method;
 
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.stereotype.Component;
-
+/**
+ * jdk提供的动态代理  实现方式   实现invoke方法
+ * @author lsx
+ *
+ */
 public class LogInterceptor implements InvocationHandler {
 	private Object target;
 	

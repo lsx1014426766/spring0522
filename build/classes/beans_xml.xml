@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+           http://www.springframework.org/schema/context
+           http://www.springframework.org/schema/context/spring-context-2.5.xsd
+           http://www.springframework.org/schema/aop
+           http://www.springframework.org/schema/aop/spring-aop-2.5.xsd
+           http://www.springframework.org/schema/tx 
+           http://www.springframework.org/schema/tx/spring-tx-2.5.xsd">
+	<context:annotation-config />
+	<context:component-scan base-package="com.bjsxt"/>
+
+	<bean id="logInterceptor" class="com.bjsxt.annotation.aop.LogInterceptor"></bean>
+	<bean
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<value>classpath:jdbc.properties</value>
+		</property>
+	</bean>
+
+	<bean id="dataSource" destroy-method="close"
+		class="org.apache.commons.dbcp.BasicDataSource">
+		<property name="driverClassName"
+			value="${jdbc.driverClassName}" />
+		<property name="url" value="${jdbc.url}" />
+		<property name="username" value="${jdbc.username}" />
+		<property name="password" value="${jdbc.password}" />
+	</bean>
+
+	<bean id="sessionFactory"
+		class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<!-- <property name="annotatedClasses">
+		这里配置注解类，@Entity等，和db table 匹配
+			<list>
+				<value>com.bjsxt.model.User</value>
+			</list>
+		</property>
+	这里直接指定和下面的扫描是一个目的，只是方式不同
+		
+		
+		 -->
+		 <property name="packagesToScan">
+			<list>
+				<value>com.bjsxt.model</value>
+				
+			</list>
+		</property>
+		
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">
+					org.hibernate.dialect.MySQLDialect
+				</prop>
+				<prop key="hibernate.show_sql">true</prop>
+			</props>
+		</property>
+	</bean>
+	<!-- 不使用注解，直接xml配置方式 -->
+	<aop:config>
+<aop:pointcut id="bussinessService"
+			expression="execution(public * com.bjsxt.service..*.*(..))" />
+		<aop:advisor pointcut-ref="bussinessService"
+			advice-ref="txAdvice" />
+		<aop:aspect id="logAspect" ref="logInterceptor">
+			<aop:before method="before" pointcut="execution(public * com.bjsxt.service..*.add(..))" />
+		</aop:aspect>
+		
+	</aop:config>
+	<!-- 注解方式的配置事务 -->
+<bean id="txManager"
+		class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	
+	<tx:annotation-driven transaction-manager="txManager"/>
+
+   <tx:advice id="txAdvice" transaction-manager="txManager">
+		<tx:attributes>
+			<tx:method name="getUser" read-only="true" />
+			<tx:method name="add*" propagation="REQUIRED"/>
+		</tx:attributes>
+	</tx:advice>
+	
+	<!-- 操作数据库的方式：
+	    1原生的jdbc连接
+	    2在xml配置中添加hibernateTemplate模板，在db操作的实现类上注入此属性
+	     然后利用hibernateTemplate提供的方法操作数据库
+	    3 db实现类继承HibernateDaoSupport 注意需要注入sessionFactory,然后久可以继续
+	    使用hibernateTemplae提供的方法了
+	    4直接使用sessionFctory，注入这个bean后，现用现取session，操作数据库
+	     总结：
+	     不管是利用那种方式，前期都是要最好准备好几样东西：
+	      1数据源  配置好数据源   准备好数据库的连接入口
+	      2sessionFacoty 连接工厂提供了一系列的内容，因为这里是和
+	      hibernate的集成：所以大体要提供的内容有：
+	       1sql 显示和格式化显示输出sql语句
+	       2hibernate需要去关联的db table pojo
+	        需要将面向db的几个pojo类告知sessionFactory
+	       3使用具体那个数据库方言   直接对应数据库  mysql or oracle 等等
+	      3hibernateTemplate  对于这个模板的理解：
+	        在连接操作数据库的过程中，前期的准备工作和后期的数据库关闭等操作都分离出来，只关心
+	        核心对db的crud，这部分内容就是hibernateTempate要处理的
+	        它其实就是把这部分内容做了统一管理，即便没有它，有了sessionFacory我们
+	        照样可以完成数据库的操作，只不过这个模板给我们都做了封装，不必再由我们从头开始处理了
+	        
+	     
+	     
+	     -->
+<bean id="hibernateTemplate" class="org.springframework.orm.hibernate3.HibernateTemplate">
+		<property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
+
+</beans>

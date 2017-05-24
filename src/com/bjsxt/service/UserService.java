@@ -6,7 +6,9 @@ import javax.annotation.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.bjsxt.dao.LogDAO;
 import com.bjsxt.dao.UserDAO;
 import com.bjsxt.model.User;
 
@@ -14,8 +16,20 @@ import com.bjsxt.model.User;
 @Service(value="userService")//默认首字母小写
 public class UserService {
 	private UserDAO userDAO;  
+	private LogDAO logDAO;
+	//@Transactional(readOnly=true)
 	public void add(User user) {
 		userDAO.save(user);
+	}
+	public User getUser(int id) {
+		return null;
+	}
+
+	public LogDAO getLogDAO() {
+		return logDAO;
+	}
+	public void setLogDAO(LogDAO logDAO) {
+		this.logDAO = logDAO;
 	}
 	public UserDAO getUserDAO() {
 		return userDAO;
