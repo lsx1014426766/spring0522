@@ -1,8 +1,11 @@
 package com.bjsxt.service;
 import java.lang.reflect.Proxy;
 
+import net.sf.cglib.proxy.Enhancer;
+
 import org.junit.Test;
 
+import com.bjsxt.aop.CglibProxy;
 import com.bjsxt.aop.LogInterceptor;
 import com.bjsxt.dao.UserDAO;
 import com.bjsxt.dao.impl.UserDAOImpl;
@@ -35,11 +38,14 @@ public class UserServiceTest {
 		LogInterceptor li = new LogInterceptor();
 		li.setTarget(userDAO);
 		UserDAO userDAOProxy = (UserDAO)Proxy.newProxyInstance(userDAO.getClass().getClassLoader(), userDAO.getClass().getInterfaces(), li);
+		//UserDAO userDAOProxy = (UserDAO)Proxy.newProxyInstance(userDAO.getClass().getClassLoader(), Class[]{UserDAO.class}, li);
 		System.out.println(userDAOProxy.getClass());
 		userDAOProxy.delete();
 		userDAOProxy.save(new User());
 		
 	}
+	
+	
 	
 	/*class $Proxy4 implements UserDAO 
 	 * {
@@ -49,6 +55,20 @@ public class UserServiceTest {
 	 * }
 	 * }
 	 */
+	/**
+	 * 测试通过cglib实现动态代理方式
+	 */
+	@Test
+     public void testCglibProxy(){
+    	 CglibProxy cglibProxy = new com.bjsxt.aop.CglibProxy();
 
+         Enhancer enhancer = new Enhancer();
+         enhancer.setSuperclass(UserService.class);
+         enhancer.setCallback(cglibProxy);
+
+         UserService o = (UserService)enhancer.create();
+         o.delete();
+    	 
+     }
 
 }

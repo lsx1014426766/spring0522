@@ -21,6 +21,10 @@ public class UserService {
 	public void add(User user) {
 		userDAO.save(user);
 	}
+	public void delete(){
+		   System.out.println("service delete for test cglibproxy");
+		   
+	   }
 	public User getUser(int id) {
 		return null;
 	}

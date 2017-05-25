@@ -38,7 +38,7 @@ public class UserDAOImpl4 implements UserDAO {
 
 	@Override
 	public void delete() {
-		// TODO Auto-generated method stub
+		System.out.println("user delete............");
 		
 	}
 
