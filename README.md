@@ -199,14 +199,15 @@ AOP（AspectOrientedProgramming）：
 如何让我的hibernate能orm方式去操作db呢？	***********
 
 这里直接指定和下面的扫描是一个目的，只是方式不同	
-    <!--方式一-->
+         方式一(这里配置注解类，@Entity等，和db table 匹配)：
+         
 	<property name="annotatedClasses">
-	<!--这里配置注解类，@Entity等，和db table 匹配->
 		<list>
 			<value>com.bjsxt.model.User</value>
 		</list>
 	</property>
-	<!--方式二-->	
+	方式二:
+	
 	<property name="packagesToScan">
 			<list>
 				<value>com.bjsxt.model</value>
