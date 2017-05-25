@@ -91,10 +91,9 @@ aop动态代理的实现方式：
  
 对动态代理和静态代理的理解********************
 
- 
-   为其它对象提供一个代理类来控制对某个对象的访问
-   为了保持行为的一致性，代理类和委托类通常会实现相同的接口，
-   所以在访问者看来两者没有丝毫的区别。通过代理类这中间一层，能有效控制对委托类对象的直接访问，也可以很好地隐藏和保护委托类对象，同时也为实施不同控制策略预留了空间，从而在设计上获得了更大的灵活性
+ 为其它对象提供一个代理类来控制对某个对象的访问
+ 为了保持行为的一致性，代理类和委托类通常会实现相同的接口，
+  所以在访问者看来两者没有丝毫的区别。通过代理类这中间一层，能有效控制对委托类对象的直接访问，也可以很好地隐藏和保护委托类对象，同时也为实施不同控制策略预留了空间，从而在设计上获得了更大的灵活性
  更通俗的说，代理解决的问题当两个类需要通信时，引入第三方代理类，将两个类的关系解耦，让我们只了解代理类即可
  但是切记，代理类和委托类要实现相同的接口，因为代理真正调用的还是委托类的方法。
  
@@ -178,11 +177,10 @@ AOP（AspectOrientedProgramming）：
 				daoimpl destroy
 		 */
 		
-		配置文件引入某种xsd，但是在识别上总是时好时坏，不知所谓。。。
-		
- org.springframework.beans.factory.xml.XmlBeanDefinitionStoreException: Line 28 in XML document from class path resource [beans_xml.xml] is invalid; nested exception is org.xml.sax.SAXParseException; lineNumber: 28; columnNumber: 66; cvc-complex-type.2.4.a: 发现了以元素 'aop:pointcut' 开头的无效内容。应以 '{"http://www.springframework.org/schema/aop":aspect}' 之一开头。
+		配置文件引入某种xsd，但是在识别上总是时好时坏，不知所谓。。。		
+        org.springframework.beans.factory.xml.XmlBeanDefinitionStoreException: Line 28 in XML document from class path resource [beans_xml.xml] is invalid; nested exception is org.xml.sax.SAXParseException; lineNumber: 28; columnNumber: 66; cvc-complex-type.2.4.a: 发现了以元素 'aop:pointcut' 开头的无效内容。应以 '{"http://www.springframework.org/schema/aop":aspect}' 之一开头。
 
-                   关于表和类的映射
+关于表和类的映射**********
         
         /**
 		 * 注意：这里在执行 db操作时，会考虑到实体和表之间的映射关系
@@ -201,19 +199,19 @@ AOP（AspectOrientedProgramming）：
 如何让我的hibernate能orm方式去操作db呢？	***********
 
 这里直接指定和下面的扫描是一个目的，只是方式不同	
-	<!-- <property name="annotatedClasses">
+	<property name="annotatedClasses">
 	这里配置注解类，@Entity等，和db table 匹配
 		<list>
 			<value>com.bjsxt.model.User</value>
 		</list>
 	</property>
-		 -->
-		 <property name="packagesToScan">
+		
+	<property name="packagesToScan">
 			<list>
 				<value>com.bjsxt.model</value>
 				
 			</list>
-		</property>
+	</property>
 		
 		
 还是存在一些问题的，代码没有整理，但意思到了，着就好比是老师教了一个算法，面对无穷的加减法
